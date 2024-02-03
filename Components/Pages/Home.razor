@@ -1,7 +1,90 @@
 ﻿@page "/"
+@rendermode InteractiveServer
 
-<PageTitle>Home</PageTitle>
+<PageTitle>CHK POWER TASK</PageTitle>
+@inject IWebHostEnvironment WebHostEnvironment
+<h1>Message List</h1> 
+<br/>
+<input type="text" style="width:500px" @bind="newMsg"> &nbsp; &nbsp;  <button class="btn btn-primary" @onclick="AddMessage">ADD</button>
+<br/>
+<table class="table">
+        <thead>
+            <tr>
+                <th>Messages are:</th>
+            </tr>
+        </thead>
+        @if (Msgs != null ){
+        <tbody>
+         @foreach (var msg in Msgs)
+            {   
+                <tr>
+                    <td>@msg</td>
+                </tr>
+            }
+        </tbody>
+        }
+    </table>
+<p style="font-size:12px;color:red;"><b><sup>*</sup>The list of messages are currently being stored in /wwwrooot/message_list.txt</b></p>
 
-<h1>Hello, world!</h1>
+@code {
+    List<string> Msgs = new List<string>();
+    private string fileContent="";
+    private string newMsg="";
+    private string filePath="";
+    
+    
+    protected override void OnInitialized()
+    {
+        
+        //var Msgs = File.ReadAllText("message_list.txt");
+        string wwwRootPath = WebHostEnvironment.WebRootPath;
+        filePath = Path.Combine(wwwRootPath, "message_list.txt");
 
-Welcome to your new app.
+        
+        try
+        {
+            Console.WriteLine(fileContent);
+            using (StreamReader reader = new StreamReader(filePath))
+            {
+                while (!reader.EndOfStream)
+                {
+                    
+                        //string myline = reader.ReadLine();
+                        string myline = reader.ReadLine() ?? "";
+                        Msgs.Add(myline);
+                    
+                }
+            }
+            
+            
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Caught exception: {ex.Message}");
+            //Msgs.Add(ex.Message);
+        }
+    }
+
+    private void AddMessage()
+    {
+        Console.WriteLine(newMsg);
+        Console.WriteLine(fileContent);
+        Msgs.Insert(0,newMsg);
+        File.WriteAllLines(filePath, Msgs);
+        /*string wwwRootPath = WebHostEnvironment.WebRootPath;
+        string filePath = Path.Combine(wwwRootPath, "message_list.txt");
+        try
+        {
+        //filePath = Path.Combine(wwwRootPath, "message_list.txt");
+        //Msgs.Insert(0,"CHESTER");
+            
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Caught exception: {ex.Message}");
+            //Msgs.Add(ex.Message);
+        }*/
+        
+    }
+
+}
