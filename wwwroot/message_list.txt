@@ -1,5 +1,4 @@
 Hello, I am Chester
 This is my message list running on Blazor
 The messages are in a text file found in wwwroot
-The list of messages are suggested to be saved in a DB or Message Queue for stability  
-
+The list of messages are suggested to be saved in a DB or Message Queue for stability
